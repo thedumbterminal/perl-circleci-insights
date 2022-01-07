@@ -1,0 +1,42 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: cimg/base:2021.07
+    steps:
+      - checkout
+      - run:
+         name: Prefix path
+         command: |
+           echo 'export PATH=~/perl5/bin:$PATH' >> $BASH_ENV
+           source $BASH_ENV
+      - run:
+          name: Show config
+          command: |
+            echo $PATH
+            which perl
+            perl -v
+      - run:
+          name: Install CPAN minus
+          command: |
+            curl -L https://cpanmin.us | perl - App::cpanminus
+      - run:
+          name: Install local::lib
+          command: |
+            cpanm --notest --local-lib=local local::lib && echo "eval $(perl -I local/lib/perl5/ -Mlocal::lib)" >> ~/.bashrc
+      - run:
+          name: Install project dependencies
+          command: |
+            cpanm --installdeps -l local --notest .
+      - run:
+          name: Test
+          command: |
+            PERL_TEST_HARNESS_DUMP_TAP=./test_output PERL5LIB=.:./local/lib/perl5 prove --timer --formatter TAP::Formatter::JUnit t/unit
+      - store_test_results:
+          path: ./test_output
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
