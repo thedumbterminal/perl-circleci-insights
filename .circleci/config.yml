@@ -6,6 +6,11 @@ jobs:
     steps:
       - checkout
       - run:
+         name: Prefix path
+         command: |
+           echo 'export PATH=~/perl5/bin:$PATH' >> $BASH_ENV
+           source $BASH_ENV
+      - run:
           name: Install CPAN minus
           command: |
             curl -L https://cpanmin.us | perl - App::cpanminus
