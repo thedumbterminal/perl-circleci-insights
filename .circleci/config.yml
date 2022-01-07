@@ -20,6 +20,9 @@ jobs:
           name: Install CPAN minus
           command: |
             curl -L https://cpanmin.us | perl - App::cpanminus
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum ".perl-version" }}-{{ checksum "cpanfile" }}
       - run:
           name: Install local::lib
           command: |
@@ -28,10 +31,14 @@ jobs:
           name: Install project dependencies
           command: |
             cpanm --installdeps -l local --notest .
+      - save_cache:
+          key: dependency-cache-{{ checksum ".perl-version" }}-{{ checksum "cpanfile" }}
+          paths:
+            - local
       - run:
           name: Test
           command: |
-            PERL_TEST_HARNESS_DUMP_TAP=./test_output PERL5LIB=.:./local/lib/perl5 prove --timer --formatter TAP::Formatter::JUnit t/unit
+            PERL_TEST_HARNESS_DUMP_TAP=./test_output PERL5LIB=.:./local/lib/perl5 prove --timer --formatter TAP::Formatter::JUnit src
       - store_test_results:
           path: ./test_output
 
