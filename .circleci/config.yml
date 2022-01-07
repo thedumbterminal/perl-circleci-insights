@@ -38,7 +38,7 @@ jobs:
       - run:
           name: Test
           command: |
-            PERL_TEST_HARNESS_DUMP_TAP=./test_output PERL5LIB=.:./local/lib/perl5 prove --timer --formatter TAP::Formatter::JUnit src
+            PERL_TEST_HARNESS_DUMP_TAP=./test_output PERL5LIB=./src:./local/lib/perl5 prove --timer --formatter TAP::Formatter::JUnit src
       - store_test_results:
           path: ./test_output
 
