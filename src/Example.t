@@ -4,6 +4,6 @@ use Test::More tests => 4;
 
 use_ok('Example');
 
-is(Example->quick(), 1);
-is(Example->slow(), 10);
-is(Example->flakey(), 1);
+is(Example->quick(), 1, 'quick()');
+is(Example->slow(), 10, 'slow()');
+is(Example->flaky(), 1, 'flaky()');

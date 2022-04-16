@@ -11,7 +11,7 @@ sub slow{
   sleep(10);
 }
 
-sub flakey{
+sub flaky{
   int rand(2);
 }
 
